@@ -12,7 +12,6 @@ auth = Blueprint("auth", __name__)
 class AuthController:
     @staticmethod
     def crear_usuario(username, email, password):
-        """Lógica para crear un nuevo usuario"""
         # Validaciones
         if Usuario.query.filter_by(email=email).first():
             raise Exception("El email ya está registrado")
@@ -24,7 +23,7 @@ class AuthController:
         nuevo_usuario = Usuario(
             username=username,
             email=email,
-            password=password,  # El hash se genera automáticamente en el modelo
+            password=password,
         )
 
         db.session.add(nuevo_usuario)
@@ -34,7 +33,6 @@ class AuthController:
 
     @staticmethod
     def autenticar_usuario(email, password):
-        """Lógica para autenticar usuario"""
         usuario = Usuario.query.filter_by(email=email).first()
 
         if not usuario:

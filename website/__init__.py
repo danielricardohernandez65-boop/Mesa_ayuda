@@ -16,7 +16,7 @@ ADMIN_PASS = "TSzxvDl1nQ"
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder="../templates", static_folder="../static")
     app.config["SECRET_KEY"] = "8=F&9w4Z{F"
     app.config["SQLALCHEMY_DATABASE_URI"] = (
         f"mysql+pymysql://{USER}:{PASSWORD}@{HOST}/{DB_NAME}"
@@ -26,7 +26,7 @@ def create_app():
     db.init_app(app)
 
     # ✅ MOVER las importaciones de modelos AQUÍ (después de db.init_app)
-    from .models import Usuario, Rol, Ticket
+    from .models import Usuario
 
     @app.errorhandler(404)
     def error_404(error):
