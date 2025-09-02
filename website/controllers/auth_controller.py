@@ -1,14 +1,9 @@
-from flask import Blueprint
+
 from website.models import Usuario
 
 from website import db
 
 # from flask_login import current_user, login_user, logout_user, login_required
-
-
-auth = Blueprint("auth", __name__)
-
-
 class AuthController:
     @staticmethod
     def crear_usuario(username, email, password):

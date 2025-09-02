@@ -1,0 +1,104 @@
+{% extends 'index.html' %}
+
+
+{% block body %}
+
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Conectamos tu mundo digital</h1>
+                <p class="lead mb-4">Soluciones integrales en telecomunicaciones para hogares y empresas. Internet
+                    de alta velocidad, telefonía y servicios cloud.</p>
+                <div class="d-flex gap-3">
+                    <a href="#services" class="btn btn-primary btn-lg">
+                        <i class="fas fa-wifi me-2"></i>Nuestros Servicios
+                    </a>
+                    <a href="#contact" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-phone me-2"></i>Contáctanos
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 offset-lg-1">
+                <!-- Login Card -->
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Nuestros Servicios</h2>
+            <p class="lead">Soluciones tecnológicas para todas tus necesidades</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-wifi feature-icon"></i>
+                        <h4>Internet Fibra Óptica</h4>
+                        <p>Hasta 1Gbps de velocidad simétrica para tu hogar o empresa.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-phone feature-icon"></i>
+                        <h4>Telefonía IP</h4>
+                        <p>Comunicación clara y confiable con tecnología VoIP.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-cloud feature-icon"></i>
+                        <h4>Cloud Services</h4>
+                        <p>Almacenamiento y soluciones en la nube para empresas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .hero-section {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1600891964599-f61ba0e24092?ixlib=rb-4.0.3');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 100px 0;
+    }
+
+    .login-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+    }
+
+    .btn-primary {
+        background: #0066cc;
+        border: none;
+        padding: 12px 30px;
+    }
+
+    .btn-primary:hover {
+        background: #0052a3;
+    }
+
+    .feature-icon {
+        font-size: 3rem;
+        color: #0066cc;
+        margin-bottom: 20px;
+    }
+</style>
+
+{% endblock %}

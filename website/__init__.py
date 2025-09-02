@@ -40,7 +40,6 @@ def create_app():
     from .views.view_tec import tecni
     from .views.view_user import user
     from .views.view_admin import admin
-    from .controllers.auth import auth
 
     @login_manager.user_loader
     def load_user(id):
@@ -48,7 +47,6 @@ def create_app():
 
     app.register_blueprint(user, url_prefix="/")
     app.register_blueprint(tecni, url_prefix="/")
-    app.register_blueprint(auth, url_prefix="/")
     app.register_blueprint(admin, url_prefix="/")
 
     with app.app_context():
