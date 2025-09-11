@@ -16,17 +16,23 @@ def admin_panel():
     tickets = []
     clientes = []
     tecnicos = []
+    estados_admin = []
 
     try:
         tickets = AdminController.ver_todos_tickets()
         clientes = AdminController.ver_todos_clientes()
         tecnicos = AdminController.ver_todos_tecnicos()
+        estados_admin = AdminController.estado_admin()
 
     except Exception as e:
         flash(f"Error: {e}", "error")
 
     return render_template(
-        "admin.html", tickets=tickets, clientes=clientes, tecnicos=tecnicos
+        "admin.html",
+        tickets=tickets,
+        clientes=clientes,
+        tecnicos=tecnicos,
+        estados=estados_admin,
     )
 
 

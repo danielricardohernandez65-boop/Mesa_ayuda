@@ -1,4 +1,6 @@
 from urllib import request
+
+from sqlalchemy import case, func
 from website import db
 from website.models.ticket import Ticket
 from website.models.user import Usuario
@@ -69,7 +71,7 @@ class AdminController:
         except Exception as e:
             db.session.rollback()
             raise Exception(e)
-        
+
     @staticmethod
     def eliminar_usuario(usuario_id):
         try:
@@ -81,4 +83,42 @@ class AdminController:
             db.session.rollback()
             raise Exception(e)
         return True
-    
+
+    @staticmethod
+    def estado_admin():
+        try:
+            # Total de tickets
+            total = db.session.query(func.count(Ticket.id)).scalar()
+
+            # Total de clientes (rol_id = 3)
+            clientes = (
+                db.session.query(func.count(Usuario.id))
+                .filter(Usuario.rol_id == 3)
+                .scalar()
+            )
+
+            # Total de técnicos (rol_id = 2)
+            tecnicos = (
+                db.session.query(func.count(Usuario.id))
+                .filter(Usuario.rol_id == 2)
+                .scalar()
+            )
+
+            # Tickets con prioridad Alta
+            alta = (
+                db.session.query(func.count(Ticket.id))
+                .filter(Ticket.prioridad == "Alta")
+                .scalar()
+            )
+
+            respuesta = {
+                "total": total or 0,
+                "clientes": clientes or 0,
+                "tecnicos": tecnicos or 0,
+                "alta": alta or 0,
+            }
+        except Exception as e:
+            db.session.rollback()
+            raise Exception(f"problema en estado admin: {e}")
+
+        return respuesta

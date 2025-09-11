@@ -15,14 +15,16 @@ def admin_panel():
         return redirect("/")
 
     tickets = []
+    estados_tecnico=[]
 
     try:
         tickets = TecnicoController.ver_tickets_tecnico(tecnico_id=current_user.id)
+        estados_tecnico = TecnicoController.estado_admin(current_user.id)
 
     except Exception as e:
         flash(f"Error: {e}", "error")
 
-    return render_template("tecnico.html", tickets=tickets)
+    return render_template("tecnico.html", tickets=tickets, estados=estados_tecnico)
 
 
 @tecni.route("/actualizar-ticket", methods=["POST"])
