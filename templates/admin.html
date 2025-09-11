@@ -1,0 +1,464 @@
+{% extends 'index.html' %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="admin-container">
+    <!-- Header del Dashboard -->
+    <div class="admin-header">
+        <div class="header-content">
+            <h1>
+                <i class="fas fa-cogs"></i>
+                Panel de Administración
+            </h1>
+            <p>Gestión completa de tickets, usuarios y técnicos</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn-primary-lg" data-bs-toggle="modal" data-bs-target="#crearTecnicoModal">
+                <i class="fas fa-user-plus"></i>
+                Nuevo Técnico
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-ticket-alt"></i>
+            </div>
+            <div class="stat-content">
+                <h3>154</h3>
+                <p>Tickets Totales</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+                <h3>42</h3>
+                <p>Clientes Activos</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-headset"></i>
+            </div>
+            <div class="stat-content">
+                <h3>8</h3>
+                <p>Técnicos Disponibles</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-content">
+                <h3>23</h3>
+                <p>Pendientes</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Tabs -->
+    <div class="admin-tabs">
+        <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="tickets-tab" data-bs-toggle="tab" data-bs-target="#tickets"
+                    type="button" role="tab">
+                    <i class="fas fa-ticket-alt me-2"></i>Tickets
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="usuarios-tab" data-bs-toggle="tab" data-bs-target="#usuarios" type="button"
+                    role="tab">
+                    <i class="fas fa-users me-2"></i>Clientes
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tecnicos-tab" data-bs-toggle="tab" data-bs-target="#tecnicos" type="button"
+                    role="tab">
+                    <i class="fas fa-headset me-2"></i>Técnicos
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="adminTabContent">
+            <!-- TAB: TICKETS -->
+            <div class="tab-pane fade show active" id="tickets" role="tabpanel">
+                <div class="tab-header">
+                    <h3>Todos los Tickets</h3>
+                    <div class="filter-options">
+                        <select class="form-select filter-select">
+                            <option>Filtrar por estado</option>
+                            <option>Abierto</option>
+                            <option>En progreso</option>
+                            <option>Pendiente</option>
+                            <option>Resuelto</option>
+                        </select>
+                        <button class="filter-btn">
+                            <i class="fas fa-sort"></i> Ordenar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tickets -->
+                <div class="tickets-grid">
+
+
+
+                    {% for ticket in tickets %}
+
+                    <div class="ticket-card">
+                        <div class="ticket-header">
+                            <span class="status-badge status-{{ ticket.estado|lower|replace(' ', '-') }}">
+                                {{ ticket.estado }}
+                            </span>
+                            <span class="priority-badge priority-{{ ticket.prioridad|lower }}">
+                                {{ ticket.prioridad }}
+                            </span>
+                        </div>
+                        <div class="ticket-content">
+                            <h3>{{ ticket.titulo }}</h3>
+                            <p>{{ ticket.descripcion }}</p>
+                        </div>
+                        <div class="ticket-footer">
+                            <div class="ticket-info">
+
+
+                                <span class="ticket-id">Tecnico: {% if ticket.tecnico_id %}
+                                    #TECNICO-{{ticket.tecnico_id}}
+
+                                    {% else %}
+                                    Sin Asignar
+
+                                    {% endif %} </span>
+                                <br>
+
+                                <span class="ticket-id">Cliente: ID-{{ ticket.usuario_id }}</span>
+
+
+                                <span class="ticket-id">#TICKET-{{ ticket.id }}</span>
+                                <span class="ticket-date">{{ ticket.date_created }}</span>
+                            </div>
+                            <div class="ticket-actions">
+                                <!-- <button class="view-ticket-btn" title="Ver detalles">
+                                    <i class="fas fa-eye"></i>
+                                </button> -->
+                                <button class="assign-ticket-btn" title="Asignar técnico" data-bs-toggle="modal"
+                                    data-bs-target="#asignarTecnicoModal" data-ticket-id="{{ ticket.id }}"
+                                    data-ticket-title="{{ ticket.titulo }}">
+                                    <i class="fas fa-user-plus"></i>
+                                </button>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    {% endfor %}
+
+
+                </div>
+
+                <div class="pagination">
+                    <button class="pagination-btn disabled">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">2</button>
+                    <button class="pagination-btn">3</button>
+                    <button class="pagination-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- TAB: USUARIOS -->
+            <div class="tab-pane fade" id="usuarios" role="tabpanel">
+                <div class="tab-header">
+                    <h3>Gestión de Clientes</h3>
+                    <div class="search-box">
+                        <input type="text" placeholder="Buscar usuarios..." class="search-input">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+
+                <div class="users-table">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Fecha Registro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% if clientes %}
+                            {% for cliente in clientes %}
+                            <tr>
+                                <td> {{cliente.id}} </td>
+                                <td> {{cliente.username}} </td>
+                                <td>{{cliente.email}}</td>
+                                <td>{{cliente.date_joined}}</td>
+
+                                <td>
+
+                                    <button class="btn-action btn-danger" title="Eliminar User" data-bs-toggle="modal"
+                                        data-bs-target="#deleteUserModal" data-user-id="{{ cliente.id }}"
+                                        data-user-name="{{ cliente.username }}" data-user-type="cliente">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                            {% else %}
+
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-3">
+                                    <i class="fas fa-users-slash fa-2x mb-2"></i>
+                                    <p class="mb-0">No hay técnicos registrados</p>
+                                </td>
+                            </tr>
+
+                            {% endif %}
+
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB: TÉCNICOS -->
+            <div class="tab-pane fade" id="tecnicos" role="tabpanel">
+                <div class="tab-header">
+                    <h3>Gestión de Técnicos</h3>
+
+                </div>
+
+                <div class="users-table">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Fecha Registro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% if tecnicos %}
+                            {% for tecnico in tecnicos %}
+                            <tr>
+                                <td> {{tecnico.id}} </td>
+                                <td> {{tecnico.username}} </td>
+                                <td>{{tecnico.email}}</td>
+                                <td>{{tecnico.date_joined}}</td>
+
+                                <td>
+                                    <!-- <button class="btn-action" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button> -->
+                                    <button class="btn-action btn-danger" title="Eliminar User" data-bs-toggle="modal"
+                                        data-bs-target="#deleteUserModal" data-user-id="{{ tecnico.id }}"
+                                        data-user-name="{{ tecnico.username }}" data-user-type="cliente">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                            {% else %}
+
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-3">
+                                    <i class="fas fa-users-slash fa-2x mb-2"></i>
+                                    <p class="mb-0">No hay técnicos registrados</p>
+                                </td>
+                            </tr>
+
+                            {% endif %}
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Crear Técnico -->
+<div class="modal fade modern-modal" id="crearTecnicoModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-user-plus"></i>
+                    <h3>Crear Nuevo Técnico</h3>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form class="tech-form" method="post" action="/crear-tecnico">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nombre completo *</label>
+                            <input type="text" name="nombre" class="form-input" placeholder="Ej: Juan Pérez" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email *</label>
+                            <input type="email" name="email" class="form-input" placeholder="tecnico@telebucaros.com"
+                                required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Contraseña *</label>
+                            <input type="password" name="clave" class="form-input" placeholder="Mínimo 8 caracteres"
+                                required>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i>
+                            Crear Técnico
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Asignar Técnico -->
+<div class="modal fade modern-modal" id="asignarTecnicoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-user-plus"></i>
+                    <h3>Asignar Técnico a Ticket</h3>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="assignTechnicianForm" class="assign-form" method="post" action="/asignar-tecnico">
+                    <!-- Campo oculto para el ticket_id -->
+                    <input type="hidden" id="ticket_id" name="ticket_id">
+
+                    <div class="mb-3">
+                        <label class="form-label">Ticket seleccionado</label>
+                        <input type="text" class="form-input" id="ticket_display" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Seleccionar técnico *</label>
+                        <select class="form-select" name="tecnico_id" required>
+                            <option value="">Seleccionar técnico...</option>
+                            {% for tecnico in tecnicos %}
+                            <option value="{{ tecnico.id }}">{{ tecnico.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Prioridad</label>
+                        <select class="form-select" name="prioridad">
+                            <option value="Baja">Baja</option>
+                            <option value="Media">Media</option>
+                            <option value="Alta">Alta</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Estado</label>
+                        <select class="form-select" name="estado">
+                            <option value="En progreso">En Progreso</option>
+                            <option value="Pendiente cliente">Pendiente cliente</option>
+                            <option value="Pendiente tercero">Pendiente de tercero</option>
+                            <option value="Pendiente aprovacion">Pendiente de aprobación</option>
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-check"></i>
+                            Asignar Técnico
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteUserModalLabel">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Confirmar Eliminación
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <i class="fas fa-trash-alt text-danger" style="font-size: 3rem;"></i>
+                </div>
+                <p class="text-center">¿Estás seguro de que deseas eliminar el siguiente usuario?</p>
+                <h6 class="text-center ticket-title-confirm" id="userInfoConfirm"></h6>
+                <div class="alert alert-warning mt-3" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    Esta acción no se puede deshacer. Todos los tickets relacionados al técnico o cliente se eliminarán
+                    también
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+                <form id="deleteUserForm" method="post" action="/eliminar-usuario">
+                    <input type="hidden" name="user_id" id="userIdInput">
+                    <input type="hidden" name="user_type" id="userTypeInput">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt me-2"></i>Eliminar Usuario
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}

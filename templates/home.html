@@ -1,66 +1,42 @@
 {% extends 'index.html' %}
 
 
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+
+{% endblock %}
+
+
 {% block body %}
 
-
-<!-- Hero Section -->
-<section class="hero-section">
+<!-- Hero Section con diseño futurista -->
+<section class="futuristic-hero">
+    <div class="cyber-grid"></div>
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">Conectamos tu mundo digital</h1>
-                <p class="lead mb-4">Soluciones integrales en telecomunicaciones para hogares y empresas. Internet
-                    de alta velocidad, telefonía y servicios cloud.</p>
-                <div class="d-flex gap-3">
-                    <a href="#services" class="btn btn-primary btn-lg">
-                        <i class="fas fa-wifi me-2"></i>Nuestros Servicios
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">Conectamos tu <span class="gradient-text">mundo digital</span></h1>
+                <p class="hero-description">Soluciones integrales en telecomunicaciones para hogares y empresas.
+                    Internet de alta velocidad, telefonía y servicios cloud.</p>
+                <div class="hero-actions">
+                    <a href="#services" class="btn btn-primary">
+                        <span class="btn-icon"><i class="fas fa-wifi"></i></span>
+                        <span>Nuestros Servicios</span>
                     </a>
-                    <a href="#contact" class="btn btn-outline-light btn-lg">
-                        <i class="fas fa-phone me-2"></i>Contáctanos
+                    <a href="#contact" class="btn btn-secondary">
+                        <span class="btn-icon"><i class="fas fa-phone"></i></span>
+                        <span>Contáctanos</span>
                     </a>
                 </div>
             </div>
-            <div class="col-lg-5 offset-lg-1">
-                <!-- Login Card -->
-
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Services Section -->
-<section id="services" class="py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold">Nuestros Servicios</h2>
-            <p class="lead">Soluciones tecnológicas para todas tus necesidades</p>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center p-4">
-                        <i class="fas fa-wifi feature-icon"></i>
-                        <h4>Internet Fibra Óptica</h4>
-                        <p>Hasta 1Gbps de velocidad simétrica para tu hogar o empresa.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center p-4">
-                        <i class="fas fa-phone feature-icon"></i>
-                        <h4>Telefonía IP</h4>
-                        <p>Comunicación clara y confiable con tecnología VoIP.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center p-4">
-                        <i class="fas fa-cloud feature-icon"></i>
-                        <h4>Cloud Services</h4>
-                        <p>Almacenamiento y soluciones en la nube para empresas.</p>
+            <div class="hero-image">
+                <div class="network-visual">
+                    <div class="orbiting-circle circle-1"></div>
+                    <div class="orbiting-circle circle-2"></div>
+                    <div class="orbiting-circle circle-3"></div>
+                    <div class="central-node">
+                        <i class="fas fa-network-wired"></i>
                     </div>
                 </div>
             </div>
@@ -68,37 +44,126 @@
     </div>
 </section>
 
-<style>
-    .hero-section {
-        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1600891964599-f61ba0e24092?ixlib=rb-4.0.3');
-        background-size: cover;
-        background-position: center;
-        color: white;
-        padding: 100px 0;
-    }
+<!-- Services Section con diseño de tarjetas asimétricas -->
+<section id="services" class="services-modern">
+    <div class="container">
+        <div class="section-header">
+            <h2>Nuestros <span class="gradient-text">Servicios</span></h2>
+            <p>Soluciones tecnológicas para todas tus necesidades de conectividad</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card card-1">
+                <div class="card-content">
+                    <div class="service-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Internet Fibra Óptica</h3>
+                    <p>Hasta 1Gbps de velocidad simétrica para tu hogar o empresa con la última tecnología FTTH.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Conexión ultra estable</li>
+                        <li><i class="fas fa-check"></i> Baja latencia</li>
+                        <li><i class="fas fa-check"></i> Soporte técnico 24/7</li>
+                    </ul>
+                    <a href="#" class="service-link">Descubre más <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
 
-    .login-card {
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        padding: 30px;
-    }
+            <div class="service-card card-2">
+                <div class="card-content">
+                    <div class="service-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <h3>Telefonía IP</h3>
+                    <p>Comunicación clara y confiable con tecnología VoIP de última generación.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Llamadas ilimitadas</li>
+                        <li><i class="fas fa-check"></i> Calidad HD</li>
+                        <li><i class="fas fa-check"></i> Integración con móvil</li>
+                    </ul>
+                    <a href="#" class="service-link">Descubre más <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
 
-    .btn-primary {
-        background: #0066cc;
-        border: none;
-        padding: 12px 30px;
-    }
+            <div class="service-card card-3">
+                <div class="card-content">
+                    <div class="service-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h3>Cloud Services</h3>
+                    <p>Almacenamiento y soluciones en la nube escalables para empresas de todos los tamaños.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Escalabilidad inmediata</li>
+                        <li><i class="fas fa-check"></i> Máxima seguridad</li>
+                        <li><i class="fas fa-check"></i> Backup automático</li>
+                    </ul>
+                    <a href="#" class="service-link">Descubre más <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-    .btn-primary:hover {
-        background: #0052a3;
-    }
+<!-- Nueva Sección: Tecnología Avanzada -->
+<section class="tech-section">
+    <div class="container">
+        <div class="tech-content">
+            <div class="tech-visual">
+                <div class="data-stream">
+                    <div class="data-point" style="--delay: 0s;"></div>
+                    <div class="data-point" style="--delay: 0.2s;"></div>
+                    <div class="data-point" style="--delay: 0.4s;"></div>
+                    <div class="data-point" style="--delay: 0.6s;"></div>
+                    <div class="data-point" style="--delay: 0.8s;"></div>
+                </div>
+            </div>
+            <div class="tech-text">
+                <h2>Tecnología de <span class="gradient-text">vanguardia</span></h2>
+                <p>Utilizamos la última tecnología en fibra óptica y equipamiento de primer nivel para garantizar la
+                    mejor experiencia de conectividad.</p>
+                <div class="tech-stats">
+                    <div class="stat">
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-label">Uptime garantizado</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">1ms</div>
+                        <div class="stat-label">Latencia mínima</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Soporte técnico</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-    .feature-icon {
-        font-size: 3rem;
-        color: #0066cc;
-        margin-bottom: 20px;
-    }
-</style>
+<!-- Sección de Cobertura -->
+<section class="coverage-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Nuestra <span class="gradient-text">Cobertura</span></h2>
+            <p>Llegamos donde otros no llegan con nuestra red de fibra óptica</p>
+        </div>
+        <div class="coverage-map">
+            <div class="map-point" style="top: 30%; left: 25%;">
+                <div class="pulse-dot"></div>
+                <div class="city-label">Norte</div>
+            </div>
+            <div class="map-point" style="top: 60%; left: 50%;">
+                <div class="pulse-dot"></div>
+                <div class="city-label">Centro</div>
+            </div>
+            <div class="map-point" style="top: 75%; left: 70%;">
+                <div class="pulse-dot"></div>
+                <div class="city-label">Sur</div>
+            </div>
+            <div class="map-connections"></div>
+        </div>
+    </div>
+</section>
+
+
 
 {% endblock %}

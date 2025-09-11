@@ -68,20 +68,26 @@ def log_out():
 @user.route("/ticktes")
 @login_required
 def ticktes_user():
+    if current_user.rol_id != 3:
+        return redirect("/")
     try:
-        ticktes_user=  TicketController.ver_tickets(usuario_id=current_user.id)
+        ticktes_user = TicketController.ver_tickets(usuario_id=current_user.id)
 
         numero_estados = TicketController.estados_tickets(usuario_id=current_user.id)
 
     except Exception as e:
         flash(f"Error al crear cuenta: {e}", "error")
 
-    return render_template("ticktes_user.html", ticktes=ticktes_user, estados=numero_estados )
+    return render_template(
+        "ticktes_user.html", ticktes=ticktes_user, estados=numero_estados
+    )
 
 
 @user.route("/crear_ticket", methods=["GET", "POST"])
 @login_required
 def crear_ticket():
+    if current_user.rol_id != 3:
+        return redirect("/")
     if request.method == "POST":
         try:
             titulo = request.form.get("titulo")
@@ -96,3 +102,20 @@ def crear_ticket():
 
         except Exception as e:
             flash(f"Error al crear cuenta: {e}", "error")
+            return redirect("/ticktes")
+
+
+@user.route("/eliminar-ticket", methods=["GET", "POST"])
+@login_required
+def eliminar_ticket_vista():
+    if current_user.rol_id != 3:
+        return redirect("/")
+    if request.method == "POST":
+        try:
+            ticket_id = request.form.get("ticket_id")
+            TicketController.eliminar_ticket(ticket_id=ticket_id)
+            flash("Ticket eliminado exitosamente", "success")
+            return redirect("/ticktes")
+        except Exception as e:
+            flash(f"Error al eliminar ticket: {e}", "error")
+            return redirect("/ticktes")

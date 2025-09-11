@@ -1,225 +1,226 @@
 {% extends 'index.html' %}
 
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tickets.css') }}">
+{% endblock %}
 
 {% block body %}
-
-
-
-
 <!-- Main Content -->
-<div class="container py-5">
+<div class="tickets-container">
     <!-- Header -->
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h1 class="display-5 fw-bold text-dark">
-                <i class="fas fa-ticket-alt me-3"></i>Mis Tickets de Soporte
+    <div class="tickets-header">
+        <div class="header-content">
+            <h1>
+                <i class="fas fa-ticket-alt"></i>
+                Mis Tickets de Soporte
             </h1>
-            <p class="lead text-muted">Gestiona todas tus solicitudes de soporte técnico</p>
+            <p>Gestiona todas tus solicitudes de soporte técnico</p>
         </div>
-        <div class="col-md-4 text-end">
-            <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#newTicketModal">
-                <i class="fas fa-plus-circle me-2"></i>Nuevo Ticket
-            </button>
-        </div>
+        <button class="btn-primary-lg" data-bs-toggle="modal" data-bs-target="#newTicketModal">
+            <i class="fas fa-plus-circle"></i>
+            Nuevo Ticket
+        </button>
     </div>
 
     <!-- Stats Cards -->
-    <div class="row mb-4">
-
-        <div class="col-md-3 mb-3">
-            <div class="dashboard-card p-4 text-center">
-                <i class="fas fa-cogs text-primary fs-1 mb-3"></i>
-                <h3 class="fw-bold"> {{ estados.progreso}} </h3>
-                <p class="text-muted mb-0">En Proceso</p>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-cogs"></i>
             </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="dashboard-card p-4 text-center">
-                <i class="fas fa-clock text-warning fs-1 mb-3"></i>
-                <h3 class="fw-bold"> {{ estados.pendiente_cliente}} </h3>
-                <p class="text-muted mb-0">Pendiente cliente</p>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="dashboard-card p-4 text-center">
-                <i class="fas fa-clock text-info fs-1 mb-3"></i>
-                <h3 class="fw-bold"> {{ estados.pendiente_tercero}}</h3>
-                <p class="text-muted mb-0">Pendiente de tercero</p>
+            <div class="stat-content">
+                <h3>{{ estados.progreso }}</h3>
+                <p>En Progeso</p>
             </div>
         </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="dashboard-card p-4 text-center">
-                <i class="fas fa-check-circle text-success fs-1 mb-3"></i>
-                <h3 class="fw-bold">{{ estados.pendiente_aprovacion}}</h3>
-                <p class="text-muted mb-0">Pendiente de aprovación</p>
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ estados.pendiente_cliente }}</h3>
+                <p>Pendiente cliente</p>
             </div>
         </div>
 
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-hourglass-half"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ estados.pendiente_tercero }}</h3>
+                <p>Pendiente de tercero</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ estados.pendiente_aprovacion }}</h3>
+                <p>Pendiente de aprovación</p>
+            </div>
+        </div>
     </div>
 
-    <!-- Tickets Table -->
-    <div class="dashboard-card p-4">
-
-        <!-- Filtrar -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="fw-bold mb-0">Todos mis Tickets</h4>
-            <div class="btn-group">
-                <button class="btn btn-outline-secondary">
-                    <i class="fas fa-filter me-2"></i>Filtrar
+    <!-- Tickets Section -->
+    <div class="tickets-section">
+        <div class="section-header">
+            <h2>Todos mis Tickets</h2>
+            <div class="filter-options">
+                <button class="filter-btn">
+                    <i class="fas fa-filter"></i>
+                    Filtrar
                 </button>
-                <button class="btn btn-outline-secondary">
-                    <i class="fas fa-sort me-2"></i>Ordenar
+                <button class="filter-btn">
+                    <i class="fas fa-sort"></i>
+                    Ordenar
                 </button>
             </div>
         </div>
 
         <!-- Tickets List -->
-        <div class="row">
-
+        <div class="tickets-grid">
             {% for ticket in ticktes %}
+            <div class="ticket-card">
+                <div class="ticket-header">
+                    <span class="status-badge status-{{ ticket.estado|lower|replace(' ', '-') }}">
+                        {{ ticket.estado }}
+                    </span>
+                    <span class="priority-badge priority-{{ ticket.prioridad|lower }}">
+                        {{ ticket.prioridad }}
+                    </span>
+                </div>
+                <div class="ticket-content">
+                    <h3>{{ ticket.titulo }}</h3>
+                    <p>{{ ticket.descripcion }}</p>
+                </div>
+                <div class="ticket-footer">
+                    <div class="ticket-info">
 
-            <div class="col-md-6 mb-4">
-                <div class="ticket-card p-4 bg-white rounded-3 shadow-sm">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <span class="status-badge status-open"> {{ ticket.estado }} </span>
-                        <span class="priority-badge priority-high"> {{ticket.prioridad}} </span>
-                    </div>
-                    <h5 class="fw-bold mb-2">{{ticket.titulo}}</h5>
-                    <p class="text-muted mb-3"> {{ticket.descripcion}} </p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <small class="text-muted">#TICKET-{{ticket.id}}</small>
-                            <br>
-                            <small class="text-muted">Creado: {{ticket.date_created}}</small>
-                        </div>
 
+                        <span class="ticket-id">Tecnico: {% if ticket.tecnico_id %} #TECNICO-{{ticket.tecnico_id}}
+
+                            {% else %}
+                            Sin Asignar
+
+                            {% endif %} </span>
+
+
+
+                        <span class="ticket-id">#TICKET-{{ ticket.id }}</span>
+                        <span class="ticket-date">{{ ticket.date_created }}</span>
                     </div>
+                    <button class="delete-ticket-btn" title="Eliminar ticket" data-bs-toggle="modal"
+                        data-bs-target="#deleteTicketModal" data-ticket-id="{{ ticket.id }}"
+                        data-ticket-title="{{ ticket.titulo }}">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+
                 </div>
             </div>
-
             {% endfor %}
-
-
-
         </div>
 
         <!-- Pagination -->
-        <nav class="d-flex justify-content-center mt-4">
-            <ul class="pagination">
-                <li class="page-item disabled"><a class="page-link" href="#">Anterior</a></li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
-            </ul>
-        </nav>
+        <div class="pagination">
+            <button class="pagination-btn disabled">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
     </div>
 </div>
 
 <!-- New Ticket Modal -->
-<div class="modal fade" id="newTicketModal" tabindex="-1">
+<div class="modal fade modern-modal" id="newTicketModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">
-                    <i class="fas fa-plus-circle me-2"></i>Nuevo Ticket de Soporte
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-plus-circle"></i>
+                    <h3>Nuevo Ticket de Soporte</h3>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form method="post" action="/crear_ticket">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Asunto *</label>
-                            <input type="text" class="form-control" placeholder="Ej: Problema con conexión"
-                                name="titulo">
+                <form method="post" action="/crear_ticket" class="ticket-form">
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label>Asunto *</label>
+                            <input type="text" class="form-input" placeholder="Ej: Problema con conexión" name="titulo"
+                                required>
                         </div>
-
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Descripción detallada *</label>
-                        <textarea class="form-control" rows="5" placeholder="Describe el problema en detalle..."
-                            name="descripcion"></textarea>
+                    <div class="form-group">
+                        <label>Descripción detallada *</label>
+                        <textarea class="form-textarea" rows="5" placeholder="Describe el problema en detalle..."
+                            name="descripcion" required></textarea>
                     </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-paper-plane me-2"></i>Enviar Ticket
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            Enviar Ticket
                         </button>
                     </div>
-
                 </form>
             </div>
-
         </div>
     </div>
 </div>
 
-<style>
-    .dashboard-card {
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
-    }
-
-    .dashboard-card:hover {
-        transform: translateY(-5px);
-    }
-
-    .status-badge {
-        padding: 8px 15px;
-        border-radius: 20px;
-        font-weight: 600;
-    }
-
-    .priority-high {
-        background-color: #ff4757;
-        color: white;
-    }
-
-    .priority-medium {
-        background-color: #ffa502;
-        color: white;
-    }
-
-    .priority-low {
-        background-color: #2ed573;
-        color: white;
-    }
-
-    .status-open {
-        background-color: #ff6b81;
-        color: white;
-    }
-
-    .status-progress {
-        background-color: #3742fa;
-        color: white;
-    }
-
-    .status-resolved {
-        background-color: #2ed573;
-        color: white;
-    }
-
-    .status-closed {
-        background-color: #57606f;
-        color: white;
-    }
-
-    .ticket-card {
-        border-left: 4px solid #0066cc;
-        transition: all 0.3s ease;
-    }
-
-    .ticket-card:hover {
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-</style>
 
 
+<!-- Delete Ticket Confirmation Modal -->
+<div class="modal fade" id="deleteTicketModal" tabindex="-1" aria-labelledby="deleteTicketModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteTicketModalLabel">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Confirmar Eliminación
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <i class="fas fa-trash-alt text-danger" style="font-size: 3rem;"></i>
+                </div>
+                <p class="text-center">¿Estás seguro de que deseas eliminar el siguiente ticket?</p>
+                <h6 class="text-center ticket-title-confirm" id="ticketTitleConfirm"></h6>
+                <div class="alert alert-warning mt-3" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    Esta acción no se puede deshacer. Todos los datos del ticket se perderán permanentemente.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+                <form id="deleteTicketForm" method="post" action="/eliminar-ticket">
+                    <input type="hidden" name="ticket_id" id="ticketIdInput">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt me-2"></i>Eliminar Ticket
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/tickets.js') }}"></script>
 {% endblock %}

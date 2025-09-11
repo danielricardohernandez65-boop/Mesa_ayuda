@@ -1,0 +1,235 @@
+{% extends 'index.html' %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tecnico.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="admin-container">
+    <!-- Header del Dashboard -->
+    <div class="admin-header">
+        <div class="header-content">
+            <h1>
+                <i class="fas fa-cogs"></i>
+                Panel de Técnico
+            </h1>
+            <p>Gestión de tickets</p>
+        </div>
+
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-ticket-alt"></i>
+            </div>
+            <div class="stat-content">
+                <h3>154</h3>
+                <p>Tickets Totales</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+                <h3>42</h3>
+                <p>Clientes Activos</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-headset"></i>
+            </div>
+            <div class="stat-content">
+                <h3>8</h3>
+                <p>Técnicos Disponibles</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-content">
+                <h3>23</h3>
+                <p>Pendientes</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Tabs -->
+    <div class="admin-tabs">
+        <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="tickets-tab" data-bs-toggle="tab" data-bs-target="#tickets"
+                    type="button" role="tab">
+                    <i class="fas fa-ticket-alt me-2"></i>Tickets
+                </button>
+            </li>
+
+        </ul>
+
+        <div class="tab-content" id="adminTabContent">
+            <!-- TAB: TICKETS -->
+            <div class="tab-pane fade show active" id="tickets" role="tabpanel">
+                <div class="tab-header">
+                    <h3>Todos los Tickets</h3>
+                    <div class="filter-options">
+                        <select class="form-select filter-select">
+                            <option>Filtrar por estado</option>
+                            <option>Abierto</option>
+                            <option>En progreso</option>
+                            <option>Pendiente</option>
+                            <option>Resuelto</option>
+                        </select>
+                        <button class="filter-btn">
+                            <i class="fas fa-sort"></i> Ordenar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tickets -->
+                <div class="tickets-grid">
+
+
+
+                    {% for ticket in tickets %}
+
+                    <div class="ticket-card">
+                        <div class="ticket-header">
+                            <span class="status-badge status-{{ ticket.estado|lower|replace(' ', '-') }}">
+                                {{ ticket.estado }}
+                            </span>
+                            <span class="priority-badge priority-{{ ticket.prioridad|lower }}">
+                                {{ ticket.prioridad }}
+                            </span>
+                        </div>
+                        <div class="ticket-content">
+                            <h3>{{ ticket.titulo }}</h3>
+                            <p>{{ ticket.descripcion }}</p>
+                        </div>
+                        <div class="ticket-footer">
+                            <div class="ticket-info">
+
+
+                                <span class="ticket-id">Tecnico: {% if ticket.tecnico_id %}
+                                    #TECNICO-{{ticket.tecnico_id}}
+
+                                    {% else %}
+                                    Sin Asignar
+
+                                    {% endif %} </span>
+                                <br>
+
+                                <span class="ticket-id">Cliente: ID-{{ ticket.usuario_id }}</span>
+
+
+                                <span class="ticket-id">#TICKET-{{ ticket.id }}</span>
+                                <span class="ticket-date">{{ ticket.date_created }}</span>
+                            </div>
+                            <div class="ticket-actions">
+                                <!-- <button class="view-ticket-btn" title="Ver detalles">
+                                    <i class="fas fa-eye"></i>
+                                </button> -->
+                                <button class="assign-ticket-btn" title="Asignar técnico" data-bs-toggle="modal"
+                                    data-bs-target="#asignarTecnicoModal" data-ticket-id="{{ ticket.id }}"
+                                    data-ticket-title="{{ ticket.titulo }}">
+                                    <i class="fas fa-user-plus"></i>
+                                </button>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    {% endfor %}
+
+
+                </div>
+
+                <div class="pagination">
+                    <button class="pagination-btn disabled">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">2</button>
+                    <button class="pagination-btn">3</button>
+                    <button class="pagination-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal: Asignar Técnico -->
+<div class="modal fade modern-modal" id="asignarTecnicoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-user-plus"></i>
+                    <h3>Cambiar Estado y Prioridad</h3>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="assignTechnicianForm" class="assign-form" method="post" action="/actualizar-ticket">
+                    <!-- Campo oculto para el ticket_id -->
+                    <input type="hidden" id="ticket_id" name="ticket_id">
+
+                    <div class="mb-3">
+                        <label class="form-label">Ticket seleccionado</label>
+                        <input type="text" class="form-input" id="ticket_display" readonly>
+                    </div>
+
+                    
+
+                    <div class="mb-3">
+                        <label class="form-label">Prioridad</label>
+                        <select class="form-select" name="prioridad">
+                            <option value="Baja">Baja</option>
+                            <option value="Media">Media</option>
+                            <option value="Alta">Alta</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Estado</label>
+                        <select class="form-select" name="estado">
+                            <option value="En progreso">En Progreso</option>
+                            <option value="Pendiente cliente">Pendiente cliente</option>
+                            <option value="Pendiente tercero">Pendiente de tercero</option>
+                            <option value="Pendiente aprovacion">Pendiente de aprobación</option>
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-check"></i>
+                            Asignar Técnico
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/tecnico.js') }}"></script>
+{% endblock %}

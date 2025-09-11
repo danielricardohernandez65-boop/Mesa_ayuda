@@ -14,6 +14,18 @@ class Usuario(db.Model, UserMixin):
     date_joined = db.Column(db.DateTime(), default=datetime.utcnow)
     rol_id = db.Column(db.Integer, db.ForeignKey("rol.id"), nullable=False, default=3)
 
+    tickets_creados = db.relationship(  # noqa: F841
+        "Ticket",
+        foreign_keys="Ticket.usuario_id",
+        backref="cliente",
+        lazy=True,
+        cascade="all, delete-orphan",
+    )
+
+    tickets_asignados = db.relationship(  # noqa: F841
+        "Ticket", foreign_keys="Ticket.tecnico_id", backref="tecnico", lazy=True, cascade="all, delete-orphan",
+    )
+
     @property
     def password(self):
         raise AttributeError("Clave no se puede leer")
@@ -27,19 +39,3 @@ class Usuario(db.Model, UserMixin):
 
     def __repr__(self):
         return f"<Usuario {self.username}>"
-
-
-def iniciar_relaciones():
-    #from .ticket import Ticket
-
-    tickets_creados = db.relationship(  # noqa: F841
-        "Ticket",
-        foreign_keys="Ticket.usuario_id",
-        backref="cliente",
-        lazy=True,
-        cascade="all, delete-orphan",
-    )
-
-    tickets_asignados = db.relationship( # noqa: F841
-        "Ticket", foreign_keys="Ticket.tecnico_id", backref="tecnico", lazy=True
-    )
