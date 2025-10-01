@@ -4,3 +4,4 @@ flask_login
 pymysql
 sqlalchemy_utils
 werkzeug
+gunicorn
