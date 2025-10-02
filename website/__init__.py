@@ -1,26 +1,36 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
-
 from flask_login import LoginManager
+import os
 
 db = SQLAlchemy()
-DB_NAME = "mesa_ayuda"
-USER = "root"
-PASSWORD = ""
-HOST = "localhost"
+
+# Configuración para desarrollo (XAMPP) y producción (Render)
+def get_database_uri():
+    if os.environ.get('RENDER'):
+        # Producción - PostgreSQL en Render
+        db_url = os.environ.get('DATABASE_URL')
+        # Asegurar formato correcto para SQLAlchemy
+        if db_url and db_url.startswith("postgres://"):
+            db_url = db_url.replace("postgres://", "postgresql://", 1)
+        return db_url
+    else:
+        # Desarrollo local - XAMPP MySQL
+        DB_NAME = "mesa_ayuda"
+        USER = "root"
+        PASSWORD = ""
+        HOST = "localhost"
+        return f"mysql+pymysql://{USER}:{PASSWORD}@{HOST}/{DB_NAME}"
 
 # Credenciales de ADMIN
 ADMIN_NAME = "Admin"
 ADMIN_EMAIL = "admin@mesaayuda.com"
 ADMIN_PASS = "TSzxvDl1nQ"
 
-
 def create_app():
     app = Flask(__name__, template_folder="../templates", static_folder="../static")
     app.config["SECRET_KEY"] = "8=F&9w4Z{F"
-    app.config["SQLALCHEMY_DATABASE_URI"] = (
-        f"mysql+pymysql://{USER}:{PASSWORD}@{HOST}/{DB_NAME}"
-    )
+    app.config["SQLALCHEMY_DATABASE_URI"] = get_database_uri()
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
@@ -56,11 +66,9 @@ def create_app():
 
     return app
 
-
 def create_database():
     db.create_all()
     print("Base de Datos creada")
-
 
 def create_initial_roles():
     roles = [
@@ -83,7 +91,6 @@ def create_initial_roles():
     except Exception as e:
         db.session.rollback()
         print(f"Error creando roles: {e}")
-
 
 def create_admin():
     try:

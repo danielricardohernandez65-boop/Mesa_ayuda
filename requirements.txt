@@ -5,3 +5,4 @@ pymysql
 sqlalchemy_utils
 werkzeug
 gunicorn
+psycopg2-binary
