@@ -39,5 +39,7 @@ jobs:
       env:
         RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
       run: |
+        echo "Instalando curl..."
+        sudo apt-get update && sudo apt-get install -y curl
         echo "Desplegando a Render..."
         curl -fsS -X POST "$RENDER_DEPLOY_HOOK"
