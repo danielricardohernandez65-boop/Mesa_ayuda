@@ -62,6 +62,51 @@ python3 main.py
 Y ahora si vaz a `localhost:5000` ya puedes usar el programa
 
 
+## Servicio de despliegue elegido
+Usamos **Render (Web Service)** con el repositorio de GitHub conectado a la rama `main`.  
+Render compila el proyecto y lo publica automáticamente cada vez que hay un push.  
+URL pública: https://mesa-ayuda-m8nz.onrender.com
+
+- Build Command: `pip install -r requirements.txt`
+- Start Command (Flask en producción): `gunicorn -w 2 -k gthread -b 0.0.0.0:$PORT main:app`
+
+> Nota: `$PORT` lo provee Render.
+
+---
+
+## Variables de entorno (cómo las configuramos)
+**Local (opcional):**
+- Archivo `.env` o variables exportadas, por ejemplo:
+  - `FLASK_ENV=development`
+  - `SECRET_KEY=<una_clave_segura>`
+  - `DATABASE_URL=<si usamos Postgres>`
+
+**En Render (Producción):**  
+En *Service → Settings → Environment* agregamos:
+- `FLASK_ENV=production`
+- `SECRET_KEY=<valor-seguro>`
+- `DATABASE_URL=<si aplica>`
+
+> No subimos secretos al repo; solo se configuran como **Environment Variables** en Render.
+
+---
+
+## Dificultades y cómo las resolvimos
+1. **No se actualizaba el sitio al editar localmente.**  
+   - Causa: Render despliega desde GitHub; los cambios locales no cuentan hasta hacer push.  
+   - Solución: activamos **Auto-Deploy** y configuramos **GitHub Actions** con un **Deploy Hook** de Render (guardado como secret en GitHub) para que el deploy sea automático al hacer push.
+
+2. **Error en GitHub Actions: `exit code 127` (“curl: not found”).**  
+   - Causa: el runner no tenía `curl` instalado.  
+   - Solución: añadimos `sudo apt-get update && sudo apt-get install -y curl` antes de llamar al Deploy Hook.
+
+3. **`flake8: command not found`.**  
+   - Causa: `flake8` no estaba instalado en el runner.  
+   - Solución: agregamos `pip install flake8 pytest` en el paso de instalación del workflow.
+
+4. **Cambios visuales que no aparecían inmediatamente.**  
+   - Causa: caché del navegador/CDN.  
+   - Solución: recarga forzada (Ctrl+F5) / modo incógnito; si era necesario, **Clear build cache & deploy** en Render.
 
 
 
